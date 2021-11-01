@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>d
+        #input{
+            width: 200px;
+        }
+        #movies{
+            height: 200px;
+            width: 206px;
+            border: 1px solid black;
+            overflow: scroll;
+            border-top: none;
+        }
+       #display{
+           display: grid;
+           grid-template-columns: repeat(3,33%);
+           margin: 5%;
+           grid-gap: 20px;
+       }
+       #img{
+           height: 100px;
+           width: 20%;
+       }
+       #tests{
+           float: right;
+           padding: 0px 200px;
+       }
+    </style>
+</head>
+<body> 
+    <div id="tests"></div>  
+    <input oninput="debounce(main,1000)" type="text" id="movie" placeholder="Enter the movie name"/>
+    <div  onclick="dropdown(event)" id="movies" ></div>
+    <button onclick="direct()" id>Signin</button>
+    
+    <div id="display"></div>
+
+</body>
+</html>
+<script>
+    var timerId;
+    let movies_div=document.getElementById("movies")
+    async function searchMovies(movie_name)
+    {
+        try{
+            let res = await fetch(`http://www.omdbapi.com/?s=${movie_name}&apikey=8dbee4de`)
+            let data = await res.json();
+            return data;
+        }
+        catch(e)
+        {
+            console.log("e:",e);
+        }
+    }
+    function appendMovies(movies){
+        if(movies === undefined)
+        {
+            return false;
+        }
+        movies_div.innerHTML=null;
+        movies.forEach(function(movie)
+        {
+            let p=document.createElement("p");
+            p.innerText=movie.Title;
+            movies_div.append(p);
+            //movies_div.addEventListener("onclick",function (){})
+        });
+    }
+    async function main() {
+        let name =document.getElementById("movie").value
+        let res=await searchMovies(name);
+        let movies_data=res.Search;
+        appendMovies(movies_data);
+        //console.log("res",res);
+        return movies_data;
+    }
+    function debounce(func,delay)
+    {
+        if(timerId)
+        {
+            clearTimeout(timerId);
+        }
+        timerId=setTimeout(function(){
+            func();
+        },delay)
+    }
+    let con=document.getElementById("display")
+    async function dropdown(e)
+    {
+        let name=e.target.innerText;
+        let d=  await main();
+        //console.log(d)
+        con.innerHTML=null
+        d.forEach(function(application)
+        {
+           if(name === application.Title)
+           {
+            let img=document.createElement("img");
+            img.src=application.Poster;
+            let p=document.createElement("p");
+            p.innerText=application.Title;
+            let year=document.createElement("p");
+            year.innerText=application.Year;
+
+            con.append(img,p,year);
+           }
+        })
+        //console.log(name);
+    }
+    function direct()
+    {
+        document.location.href="signup_api.html"
+    }
+    let final= document.createElement("p")
+    final.innerText=localStorage.getItem("values");
+    console.log("final", final);
+    let d=document.getElementById("tests");
+    d.innerHTML=null
+    d.append(final.innerText)
+    
+</script>
