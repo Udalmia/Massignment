@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel= "stylesheet" href = "styles/style.css"/>
+</head>
+<body>
+    <div id="navbar"></div>
+    <div id="products"></div>
+</body>
+</html>
+<script type="module">
+    
+import navbar from "./components/navbar.js";
+import {getData,append} from "./scripts/showData.js";
+
+let navbar_div = document.getElementById("navbar")
+
+navbar_div.innerHTML = navbar();
+
+
+  
+
+fetch(`https://themealdb.com/api/json/v1/1/random.php`)
+         .then(function(res){
+          return res.json();
+         })
+         .then(function(res){
+          showProducts(res.meals);
+   console.log(res)
+         });
+
+     let container = document.getElementById("products");
+
+
+function showProducts(products){
+ console.log(products)
+products.forEach(function(product) {
+
+let div = document.createElement("div");
+let img = document.createElement("img");
+img.src = product.strMealThumb;
+let name = document.createElement("p");
+name.innerText = `Origin: `+ product.strArea;
+name.style.color = "gray";
+let category = document.createElement("p");
+category.innerText = `Category: `+ product.strCategory;
+category.style.color = "red";
+let instructions = document.createElement("p");
+instructions.innerText = `Instructions to prepare: ` + product.strInstructions;
+instructions.style.color = "purple"
+let ingrediants_1 = document.createElement("p");
+ingrediants_1.innerText = `ingredients 1 -` + product.strIngredient1;
+let ingrediants_2 = document.createElement("p");
+ingrediants_2.innerText = `ingredients 2 -` + product.strIngredient2;
+let ingrediants_3 = document.createElement("p");
+ingrediants_3.innerText = `ingredients 3 -` + product.strIngredient3;
+let ingrediants_4 = document.createElement("p");
+ingrediants_4.innerText = `ingredients 4 -` + product.strIngredient4;
+let ingrediants_5 = document.createElement("p");
+ingrediants_5.innerText = `ingredients 5 -` + product.strIngredient5;
+let ingrediants_6 = document.createElement("p");
+ingrediants_6.innerText = `ingredients 6 -` + product.strIngredient6;
+let ingrediants_7 = document.createElement("p");
+ingrediants_7.innerText = `ingredients 7 -` + product.strIngredient7;
+let youtube_link = document.createElement("p");
+youtube_link.innerText = `youtube link: ` + product.strYoutube;
+div.append(img,name, category,youtube_link,ingrediants_1,ingrediants_2,ingrediants_3,ingrediants_4,ingrediants_5,ingrediants_6,ingrediants_7,instructions)
+console.log(div)
+container.append(div)
+
+});
+}
+showProducts(products)
+
+</script>
