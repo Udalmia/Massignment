@@ -1,45 +1,44 @@
-const express= require("express")
-const users= require("./users.json")
-const app=express();
+const express = require("express")
+
+const books = require("./MOCK_DATA")
+
+const app = express()
+
 app.use(express.json());
-const logger=(req, res, next) => {
-    req.name = "Dhaval Chedda";
-    console.log(req.method);
-    next();
-};
-app.use(logger);
-app.get("/",(req, res) =>{
-    
-    res.send(users);
+
+app.get("/", (req, res) => {
+    res.send(books)
 });
-app.post("/",(req,res) =>{
-    // console.log(req.body);
-     const newUsers=[...users, req.body]
-     res.send(newUsers);
-     //console.log(newUsers)
- });
- app.get("/:id",(req, res) =>{
-    const newUsers=[...users, req.params.id]
-    res.send(newUsers);
-   // console.log(req.params.id)
-   // res.send(users);
+
+app.get("/books/:id", (req, res) => {
+    const newBooks = books.filter((book)=> book.id === req.params.id);
+    res.send(newBooks)
 });
-app.patch("/:book_name" ,(req, res) =>{
-    const newUsers=users.map((user) =>{
-        if(req.params.book_name === user.book_name){
-            return req.body;
-        }
-        return user;
-    });
-    res.send(newUsers);
-   // res.send("api_requested_by:", req.name)
-    console.log("api_requested_by:", req.name)
+
+app.post("/books", (req, res) => {
+ 
+    const newBooks = [...books,req.body];
+
+    res.send(newBooks)
 
 });
-app.delete("/:book_name",(req, res) =>{
-    const newUsers =users.filter((user) => user.book_name !== req.params.book_name);
-    res.send(newUsers);
-});
-app.listen(2345, function(){
-    console.log("listening to port 2345");
-});
+
+
+app.patch("/books/:author", (req,res) => {
+    console.log(req.params.id)
+    res.send(req.params)
+})
+
+
+app.delete("/:id", (req,res) => {
+    const newBooks = books.filter((book) => book.id !== req.params.id)
+
+    res.send(newBooks)
+})
+
+
+
+
+app.listen(2342, function() {
+    console.log("listening on port 2342")
+})
